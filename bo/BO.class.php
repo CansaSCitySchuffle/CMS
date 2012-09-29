@@ -1,6 +1,18 @@
 <?php
+/**
+	public static function getClass();
 
-abstract class BO {
+	protected static function getCreateSQL();
+	
+	protected function getName();	
+	
+	protected static function getAttributeNames();	
+
+	protected function getIndexedAttributes();
+
+ */
+
+abstract class BO implements Accessable{
 	
 	protected $persistant = false;	
 	static private $instances = array();
@@ -86,7 +98,10 @@ abstract class BO {
 	}
 
 	public function setAttribute($name, $value) {
-		$this->attributes[$name] = $value;
+		if ($value instanceof BO) 
+			$this->attributes[$name] = $value->getId();
+		else
+			$this->attributes[$name] = $value;
 	}	
 
 	public function getAttribute($name) {
@@ -95,11 +110,18 @@ abstract class BO {
 		} else 
 			return null;
 	}
+
+	public function getId() {
+		return $this->getAttribute("id");
+	}
 	
 	public abstract static function getClass();
 
 	protected abstract static function getCreateSQL();
 	
+	/**
+	 * @return String name of the Table and unique identifier of this BO-Class
+	 */
 	protected abstract function getName();	
 	
 	protected abstract static function getAttributeNames();	

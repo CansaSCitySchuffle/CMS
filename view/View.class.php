@@ -22,7 +22,7 @@
 
 
 **/
-abstract class View {
+abstract class View implements Accessable {
 
 	public static $guest = 0;
 	public static $user = 1;
@@ -43,7 +43,13 @@ abstract class View {
 		return $this->getViewName();
 	}
 
+	public function getId() {
+		return $this->getViewKey();
+	}
+
 	public function printView() {
+		RightWatcher::checkRights($this, Right::READ);		
+
 		$this->prepare();
 		$content = "";
 		if($this->checkRights()) {

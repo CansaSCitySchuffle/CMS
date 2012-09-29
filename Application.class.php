@@ -186,7 +186,7 @@ class Application {
 			if ($user == "guest") {
 				$this->viewOptions['site'] = "index";	
 			} else {
-				$status = $user->getStatus();
+				$status = $user->getUserGroup();
 				if ($status == "User" || $status == "Premium User") {
 					$this->viewOptions['site'] = "user";	
 				} else {

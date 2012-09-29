@@ -41,6 +41,10 @@ abstract class BO_User extends BO {
 	 * @return String qualified String to find out which UserGroup this User belongs to
 	 */
 	public abstract function getUserGroup();
+
+	protected function getName() {
+		throw new Exception("tried to instantiate BO_User.");
+	}
 	
 }
 

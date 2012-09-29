@@ -32,6 +32,9 @@ function __autoload($class) {
 	} else 
 	if (stristr($class,"View")) {
 		$folder = "view/";
+	} else
+	if (stristr($class, "Right") || $class == "Accessable") {
+		$folder = "right/";
 	}	
 
 	if (is_file($folder.$class.".class.php")){
