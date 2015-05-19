@@ -1,0 +1,24 @@
+{
+    "name": "atk/lucas",
+    "description": "[L]ightweight [u]secase driven [a]rchitecture [s]oa ready Framework",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alwin Mark",
+            "email": "alwin@atk-solutions.de"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "music-ant/datastore": "dev-master",
+        "alwinmark/puice": "dev-master"
+    },
+    "require-dev": {
+        "behat/behat": "^3.0@dev",
+        "behat/mink": "^1.7@dev",
+        "behat/mink-goutte-driver": "^1.1@dev",
+        "behat/mink-sahi-driver": "^1.2@dev",
+        "phpspec/phpspec": "^2.2@dev"
+    },
+    "autoload": {"psr-0": {"": "src"}}
+}
