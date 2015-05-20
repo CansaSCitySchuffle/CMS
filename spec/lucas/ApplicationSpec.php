@@ -8,6 +8,7 @@ use Prophecy\Argument;
 use lucas\Module;
 use lucas\ViewFrame;
 use lucas\Logger;
+use lucas\Request;
 
 
 class ApplicationSpec extends ObjectBehavior
@@ -17,14 +18,30 @@ class ApplicationSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
         $this->shouldHaveType('lucas\Application');
     }
 
     function it_calls_the_corrrect_viewframe_by_key(ViewFrame $viewFrame) {
         $this->addViewFrame($this->view, $viewFrame);
-        $viewFrame->serve($this->action)->shouldBeCalled();
+        $viewFrame->serve(Argument::type('lucas\Request'))->shouldBeCalled();
 
-        $this->serve($this->view, $this->action);
+        $_GET['view'] = $this->view;
+
+        $this->serve();
+    }
+
+    function it_passes_a_generated_request_object_to_the_corresponding_viewframe(ViewFrame $viewFrame) {
+        $this->addViewFrame($this->view, $viewFrame);
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['view'] = $this->view;
+        $expectedRequest = new Request();
+        $expectedRequest->method = 'GET';
+        $expectedRequest->view = $this->view;
+
+        $viewFrame->serve($expectedRequest)->shouldBeCalled();
+
+        $this->serve();
     }
 
     function it_is_possible_to_pass_a_correlation_id() {
@@ -49,14 +66,13 @@ class ApplicationSpec extends ObjectBehavior
         Logger $logger, ViewFrame $viewFrame
     ) {
         $expectedCorrelationId = "korrelationID";
-        $expectedUserId = "guest";
 
         $this->beConstructedWith($logger, $expectedCorrelationId);
         $this->addViewFrame($this->view, $viewFrame);
         $viewFrame->serve(Argument::any())->willThrow('\Exception');
 
 
-        $logger->fatal($expectedCorrelationId, $expectedUserId, null)->shouldBeCalled();
+        $logger->fatal($expectedCorrelationId, null)->shouldBeCalled();
 
         $this->serve($this->view, $this->action);
     }

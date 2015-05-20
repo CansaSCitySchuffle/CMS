@@ -37,17 +37,26 @@ class Application
         $this->viewModels[$key] = $viewModel;
     }
 
-    public function serve($view, $action) {
+    public function serve() {
+        $view = $_GET['view'];
         if (!array_key_exists($view, $this->viewModels)) {
             throw new \Exception("foo");
         }
 
         $viewModel = $this->viewModels[$view];
 
+        $request = new Request();
+        $request->view = $view;
+        $request->method = $_SERVER['REQUEST_METHOD'];
+
         try {
-            $viewModel->serve($action);
+            $viewModel->serve($request);
         } catch (\Exception $e) {
-            $this->logger->fatal($this->correlation_id, 'guest', null);
+            if ($e instanceof \Prophecy\Exception\Call\UnexpectedCallException) {
+                throw $e;
+            }
+
+            $this->logger->fatal($this->correlation_id,  null);
         }
     }
 }
