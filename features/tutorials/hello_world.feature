@@ -18,10 +18,6 @@ And I create a directory: "./web"
 And I create a File: "web/index.php" with:
 """
 <?php
-    ini_set('display_errors', 'On');
-    ini_set('html_errors', 0);
-    error_reporting(E_ALL);
-
     require('../vendor/autoload.php');
 
     $app = new \lucas\Application();
