@@ -39,8 +39,10 @@ class Application
 
     public function serve() {
         $view = $_GET['view'];
+        $page = $_GET['page'];
+
         if (!array_key_exists($view, $this->viewModels)) {
-            throw new \Exception("foo");
+            throw new \Exception("No view parameter delivered!");
         }
 
         $viewModel = $this->viewModels[$view];
@@ -48,6 +50,7 @@ class Application
         $request = new Request();
         $request->view = $view;
         $request->method = $_SERVER['REQUEST_METHOD'];
+        $request->page = $page;
 
         try {
             $viewModel->serve($request);
@@ -56,7 +59,7 @@ class Application
                 throw $e;
             }
 
-            $this->logger->fatal($this->correlation_id,  null);
+            $this->logger->fatal($this->correlation_id,  $request);
         }
     }
 }

@@ -1,6 +1,6 @@
 {
-    "name": "atk/lucas",
-    "description": "[L]ightweight [u]secase driven [a]rchitecture [s]oa ready Framework",
+    "name": "alwinmark/lucas_mvc",
+    "description": "[L]ightweight [u]secase driven [a]rchitecture [s]oa ready MVC Framework",
     "license": "MIT",
     "authors": [
         {
@@ -18,7 +18,8 @@
         "behat/mink": "^1.7@dev",
         "behat/mink-goutte-driver": "^1.1@dev",
         "behat/mink-sahi-driver": "^1.2@dev",
-        "phpspec/phpspec": "^2.2@dev"
+        "phpspec/phpspec": "^2.2@dev",
+        "behat/mink-extension": "^2.0@dev"
     },
     "autoload": {"psr-0": {"": "src"}}
 }

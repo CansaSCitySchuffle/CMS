@@ -15,6 +15,7 @@ class ApplicationSpec extends ObjectBehavior
 {
     private $view = "mockViewModel";
     private $action = "action";
+    private $page = "page";
 
     function it_is_initializable()
     {
@@ -27,6 +28,7 @@ class ApplicationSpec extends ObjectBehavior
         $viewFrame->serve(Argument::type('lucas\Request'))->shouldBeCalled();
 
         $_GET['view'] = $this->view;
+        $_GET['page'] = $this->page;
 
         $this->serve();
     }
@@ -35,9 +37,11 @@ class ApplicationSpec extends ObjectBehavior
         $this->addViewFrame($this->view, $viewFrame);
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['view'] = $this->view;
+        $_GET['page'] = $this->page;
         $expectedRequest = new Request();
         $expectedRequest->method = 'GET';
         $expectedRequest->view = $this->view;
+        $expectedRequest->page= $this->page;
 
         $viewFrame->serve($expectedRequest)->shouldBeCalled();
 
@@ -66,13 +70,22 @@ class ApplicationSpec extends ObjectBehavior
         Logger $logger, ViewFrame $viewFrame
     ) {
         $expectedCorrelationId = "korrelationID";
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['view'] = $this->view;
+        $_GET['page'] = $this->page;
+
 
         $this->beConstructedWith($logger, $expectedCorrelationId);
         $this->addViewFrame($this->view, $viewFrame);
         $viewFrame->serve(Argument::any())->willThrow('\Exception');
 
+        $expectedRequest = new Request();
+        $expectedRequest->view = $this->view;
+        $expectedRequest->method = 'GET';
+        $expectedRequest->page= 'page';
 
-        $logger->fatal($expectedCorrelationId, null)->shouldBeCalled();
+
+        $logger->fatal($expectedCorrelationId, $expectedRequest)->shouldBeCalled();
 
         $this->serve($this->view, $this->action);
     }
