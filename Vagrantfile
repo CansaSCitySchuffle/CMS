@@ -13,7 +13,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "nfq/wheezy"
 
   config.vm.network "forwarded_port", guest: 7237, host: 7237
-  config.vm.provision  "shell",  path: install.sh 
+  config.vm.provision  "shell" do |s|
+    s.path = "install.sh"
+    s.args = "/vagrant/features/testapp/web"
+  end
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
