@@ -1,0 +1,13 @@
+language: php
+
+php: [5.4, 5.5, hhvm]
+
+before_script:
+  - export COMPOSER_ROOT_VERSION=2.0.0-RC3
+  - composer selfupdate
+  - composer install --prefer-source
+  - sudo ln -s . /vagrant
+
+script:
+  - ./vendor/bin/phpspec --no-interaction -vvv --format=pretty run
+  - ./vendor/bin/behat --format=pretty
