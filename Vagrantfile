@@ -4,13 +4,6 @@
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
-$script = <<SCRIPT
-  sudo apt-get update
-  sudo apt-get install -y apache2 php5
-  sudo sed -i 's,/var/www,/vagrant/features/testapp/web,' /etc/apache2/sites-available/default
-  sudo /etc/init.d/apache2 restart
-SCRIPT
-
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
@@ -19,8 +12,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "nfq/wheezy"
 
-  config.vm.network "forwarded_port", guest: 80, host: 7237
-  config.vm.provision  "shell",  inline: $script
+  config.vm.network "forwarded_port", guest: 7237, host: 7237
+  config.vm.provision  "shell" do |s|
+    s.path = "install.sh"
+    s.args = "/vagrant/features/testapp/web"
+  end
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
