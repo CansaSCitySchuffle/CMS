@@ -37,7 +37,7 @@ class FeatureContext extends MinkContext
 
     private function deleteTestdir() {
         $testfolder = "{$this->workingDirectory}";
-//        system("rm -rf $testfolder");
+        system("rm -rf $testfolder");
     }
 
     /**

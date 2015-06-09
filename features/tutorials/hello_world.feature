@@ -17,11 +17,7 @@ When I create a composer file like this:
 And I create a directory: "./web"
 And I create a File: "web/index.php" with:
 """
-
-foo
 <?php
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
     require('../vendor/autoload.php');
 
     $app = new \lucas\Application();

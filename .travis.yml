@@ -1,23 +1,13 @@
 language: php
 
-php: [5.4, 5.5, hhvm]
+php: [5.5, 5.6, hhvm]
 
 before_script:
   - export COMPOSER_ROOT_VERSION=2.0.0-RC3
   - composer selfupdate
   - composer install --prefer-source
-  - sudo ln -s . /vagrant
   - ./install.sh
-  - sleep 5
-  - ls
-  - netstat -tulpn
-  - cat /etc/apache2/sites-available/default
-  - curl localhost:7237
-  - find features
 
 script:
   - ./vendor/bin/phpspec --no-interaction -vvv --format=pretty run
   - ./vendor/bin/behat --format=pretty
-after_script:
-  - find features
-  - curl localhost:7237
