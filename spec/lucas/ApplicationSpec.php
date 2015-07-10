@@ -33,6 +33,35 @@ class ApplicationSpec extends ObjectBehavior
         $this->serve();
     }
 
+    function it_should_set_view_and_page_to_index_if_they_are_undefined(Module $module) {
+        unset($_GET['view']);
+        unset($_GET['page']);
+
+        $this->addModule("module", $module);
+
+        $expectedRequest = new \lucas\Request();
+        $expectedRequest->view = 'index';
+        $expectedRequest->page = 'index';
+        $expectedRequest->method = 'GET';
+        $module->serve($expectedRequest)->shouldBeCalled();
+
+        $this->getModule("module");
+
+    }
+
+    function it_calls_widget_serve_for_getModules_and_returns_the_output(Module $module) {
+        $this->addModule("NewModule", $module);
+
+        $module->serve(Argument::type('lucas\Request'))->willReturn("Hello World");
+
+        $this->getModule("NewModule")->shouldReturn("Hello World");
+    }
+
+    function it_throws_an_exception_if_module_key_is_registered_twice(Module $module1, Module $module2) {
+        $this->addModule('NewModule', $module1);
+        $this->shouldThrow('\Exception')->during("addModule", array('NewModule', $module2));
+    }
+
     function it_passes_a_generated_request_object_to_the_corresponding_viewframe(ViewFrame $viewFrame) {
         $this->addViewFrame($this->view, $viewFrame);
         $_SERVER['REQUEST_METHOD'] = 'GET';

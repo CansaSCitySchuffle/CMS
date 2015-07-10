@@ -5,6 +5,7 @@ namespace lucas;
 class Application
 {
     private $viewModels = array();
+    private $modules = array();
 
     private $correlation_id = null;
     private $logger = null;
@@ -29,7 +30,11 @@ class Application
 
     public function addModule($key, $module)
     {
-        throw new \Exception("Not Implemented");
+        if (array_key_exists($key, $this->modules)) {
+            throw new \Exception("Module {$this->modules} allready exists.");
+        }
+
+        $this->modules[$key] = $module;
     }
 
     public function addViewFrame($key, $viewModel)
@@ -38,19 +43,14 @@ class Application
     }
 
     public function serve() {
-        $view = $_GET['view'];
-        $page = $_GET['page'];
+        $request = self::createRequest();
 
-        if (!array_key_exists($view, $this->viewModels)) {
+        if (!array_key_exists($request->view, $this->viewModels)) {
             throw new \Exception("No view parameter delivered!");
         }
 
-        $viewModel = $this->viewModels[$view];
+        $viewModel = $this->viewModels[$request->view];
 
-        $request = new Request();
-        $request->view = $view;
-        $request->method = $_SERVER['REQUEST_METHOD'];
-        $request->page = $page;
 
         try {
             $viewModel->serve($request);
@@ -61,5 +61,23 @@ class Application
 
             $this->logger->fatal($this->correlation_id,  $request);
         }
+    }
+
+    private static function createRequest() {
+        $view = (isset($_GET['view'])) ? $_GET['view'] : 'index';
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 'index';
+
+        $request = new Request();
+        $request->view = $view;
+        $request->method = $_SERVER['REQUEST_METHOD'];
+        $request->page = $page;
+
+        return $request;
+    }
+
+    public function getModule($key)
+    {
+        $request = self::createRequest();
+        return $this->modules[$key]->serve($request);
     }
 }
